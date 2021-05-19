@@ -11,12 +11,12 @@ public class MyFrame extends JFrame {
 	private JButton ovalBtn;
 	private JButton lineBtn;
 	private JButton moveBtn;
+	private JButton groupBtn;
 	private MyButtonActionListner _myListener;
 
 	private Vector<Figure> _figureList;
-	private int _figureType = 0;
-	private Boolean _isMoveState = false;
-	private Figure _clickedFigure = null;
+
+	private StatePattern _nowState = null;
 
 	public MyFrame() {
 		setSize(500, 500);
@@ -26,7 +26,7 @@ public class MyFrame extends JFrame {
 	}
 
 	public void Init() {
-		_myListener = new MyButtonActionListner();
+		_myListener = new MyButtonActionListner(this);
 		_figureList = new Vector<>();
 
 		rectBtn = new JButton("사각형");
@@ -48,83 +48,44 @@ public class MyFrame extends JFrame {
 		moveBtn.setBounds(290, 20, 80, 35);
 		moveBtn.addActionListener(_myListener);
 		add(moveBtn);
+
+		groupBtn = new JButton("그룹화");
+		groupBtn.setBounds(380, 20, 80, 35);
+		groupBtn.addActionListener(_myListener);
+		add(groupBtn);
 	}
 
 	class MyButtonActionListner implements ActionListener {
+		private MyFrame frame;
+
+		public MyButtonActionListner(MyFrame f) {
+			frame = f;
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == rectBtn) {
-				_figureType = 1;
+				_nowState = new DrawRectState(frame);
 			} else if (e.getSource() == ovalBtn) {
-				_figureType = 2;
+				_nowState = new DrawOvalState(frame);
 			} else if (e.getSource() == lineBtn) {
-				_figureType = 3;
+				_nowState = new DrawLineState(frame);
 			} else if (e.getSource() == moveBtn) {
-				_isMoveState = true;
-				_figureType = 0;
+				_nowState = new MoveState(frame);
 			}
-
-			// 도형 버튼을 눌렀을 경우 움직이는 상태 false
-			if (_figureType != 0)
-				_isMoveState = false;
 		}
+	}
 
+	public void do_something(Point p1, Point p2) {
+		_nowState.do_something(p1, p2);
 	}
 
 	public void addFigure(Figure f) {
 		_figureList.add(f);
+		repaint();
 	}
 
 	public Vector<Figure> getFigureList() {
 		return _figureList;
-	}
-
-	public void makeFigure(Point p1, Point p2) {
-		Figure f = null;
-		Point realPos = new Point(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y));
-		Point realSize = new Point(Math.abs(p1.x - p2.x), Math.abs(p1.y - p2.y));
-
-		if (_figureType == 1) {
-			f = new Rect();
-		} else if (_figureType == 2) {
-			f = new Oval();
-		} else if (_figureType == 3) {
-			f = new Line();
-			realPos = p1;
-			realSize = new Point((p2.x - p1.x), (p2.y - p1.y));
-		}
-		f.setPosition(realPos);
-		f.setSize(realSize);
-		this.addFigure(f);
-
-		repaint();
-	}
-
-	public Boolean isMakeFigureState() {
-		return (_figureType != 0);
-	}
-
-	public Boolean isMoveFigureState() {
-		return _isMoveState;
-	}
-
-	public void checkClickedFigure(Point point) {
-		for (Figure it : _figureList) {
-			if (it.contains(point)) {
-				_clickedFigure = it;
-			}
-		}
-	}
-
-	public void moveFigure(Point p1, Point p2) {
-		if (_clickedFigure == null)
-			return;
-		Point pos = _clickedFigure.getPosition();
-		Point addPos = new Point(p1.x - pos.x, p1.y - pos.y);
-		Point realPos = new Point(p2.x - addPos.x, p2.y - addPos.y);
-		_clickedFigure.setPosition(realPos);
-		_clickedFigure = null;
-		repaint();
 	}
 }

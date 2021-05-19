@@ -18,16 +18,11 @@ public class MyMouseListener implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		_firstPos = e.getPoint();
-		if (_frame.isMoveFigureState())
-			_frame.checkClickedFigure(e.getPoint());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (_frame.isMakeFigureState())
-			_frame.makeFigure(_firstPos, e.getPoint());
-		if (_frame.isMoveFigureState())
-			_frame.moveFigure(_firstPos, e.getPoint());
+		_frame.do_something(_firstPos, e.getPoint());
 	}
 
 	@Override

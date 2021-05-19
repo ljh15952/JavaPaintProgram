@@ -1,15 +1,15 @@
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("QWEQWE");
 		MyFrame frame = new MyFrame();
 		frame.Init();
+		frame.setVisible(true);
 	}
 }
 /*
 TODO
 1. Draw Rect, Oval, Line
-2. Make JButton to Draw
+2. Make JButton and Drag to draw 
 3. Make Move Button
 4. Make Group system to button
 5. Test

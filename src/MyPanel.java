@@ -16,7 +16,6 @@ public class MyPanel extends JPanel {
 	public void paint(Graphics g) {
 		super.paint(g);
 		for (Figure it : _frame.getFigureList()) {
-			System.out.println("qwe");
 			it.Draw(g);
 		}
 	}

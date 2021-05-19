@@ -10,17 +10,19 @@ public class MyFrame extends JFrame {
 	private JButton rectBtn;
 	private JButton ovalBtn;
 	private JButton lineBtn;
+	private JButton moveBtn;
 	private MyButtonActionListner _myListener;
 
 	private Vector<Figure> _figureList;
 	private int _figureType = 0;
+	private Boolean _isMoveState = false;
+	private Figure _clickedFigure = null;
 
 	public MyFrame() {
 		setSize(500, 500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setContentPane(new MyPanel(this));
 		setLayout(null);
-		setVisible(true);
 	}
 
 	public void Init() {
@@ -41,6 +43,11 @@ public class MyFrame extends JFrame {
 		lineBtn.setBounds(200, 20, 80, 35);
 		lineBtn.addActionListener(_myListener);
 		add(lineBtn);
+
+		moveBtn = new JButton("이동");
+		moveBtn.setBounds(290, 20, 80, 35);
+		moveBtn.addActionListener(_myListener);
+		add(moveBtn);
 	}
 
 	class MyButtonActionListner implements ActionListener {
@@ -53,7 +60,14 @@ public class MyFrame extends JFrame {
 				_figureType = 2;
 			} else if (e.getSource() == lineBtn) {
 				_figureType = 3;
+			} else if (e.getSource() == moveBtn) {
+				_isMoveState = true;
+				_figureType = 0;
 			}
+
+			// 도형 버튼을 눌렀을 경우 움직이는 상태 false
+			if (_figureType != 0)
+				_isMoveState = false;
 		}
 
 	}
@@ -78,7 +92,7 @@ public class MyFrame extends JFrame {
 		} else if (_figureType == 3) {
 			f = new Line();
 			realPos = p1;
-			realSize = p2;
+			realSize = new Point((p2.x - p1.x), (p2.y - p1.y));
 		}
 		f.setPosition(realPos);
 		f.setSize(realSize);
@@ -89,5 +103,28 @@ public class MyFrame extends JFrame {
 
 	public Boolean isMakeFigureState() {
 		return (_figureType != 0);
+	}
+
+	public Boolean isMoveFigureState() {
+		return _isMoveState;
+	}
+
+	public void checkClickedFigure(Point point) {
+		for (Figure it : _figureList) {
+			if (it.contains(point)) {
+				_clickedFigure = it;
+			}
+		}
+	}
+
+	public void moveFigure(Point p1, Point p2) {
+		if (_clickedFigure == null)
+			return;
+		Point pos = _clickedFigure.getPosition();
+		Point addPos = new Point(p1.x - pos.x, p1.y - pos.y);
+		Point realPos = new Point(p2.x - addPos.x, p2.y - addPos.y);
+		_clickedFigure.setPosition(realPos);
+		_clickedFigure = null;
+		repaint();
 	}
 }

@@ -12,6 +12,21 @@ public abstract class Figure {
 	public void setSize(Point p) {
 		_size = p;
 	}
-	
+
+	public Point getPosition() {
+		return _position;
+	}
+
+	public Point getSize() {
+		return _size;
+	}
+
 	public abstract void Draw(Graphics g);
+
+	public Boolean contains(Point p) {
+		if (_position.x <= p.x && _position.y <= p.y && _size.x + _position.x >= p.x && _size.y + _position.y >= p.y) {
+			return true;
+		}
+		return false;
+	}
 }

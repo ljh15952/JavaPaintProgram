@@ -24,11 +24,8 @@ public class MoveState implements StatePattern {
 		if (_clickedFigure == null)
 			return;
 
-		Point pos = _clickedFigure.getPosition();
-		Point addPos = new Point(p1.x - pos.x, p1.y - pos.y);
-		Point realPos = new Point(p2.x - addPos.x, p2.y - addPos.y);
-		_clickedFigure.setPosition(realPos);
-		_clickedFigure = null;
+		Point addPos = new Point(p2.x - p1.x, p2.y - p1.y);
+		_clickedFigure.addPosition(addPos);
 		_frame.repaint();
 	}
 

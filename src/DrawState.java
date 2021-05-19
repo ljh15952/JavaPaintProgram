@@ -1,5 +1,6 @@
 import java.awt.Point;
 
+//어댑터 패턴
 public class DrawState {
 	protected MyFrame _frame;
 

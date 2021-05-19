@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -14,7 +15,7 @@ public class MyFrame extends JFrame {
 	private JButton groupBtn;
 	private MyButtonActionListner _myListener;
 
-	private Vector<Figure> _figureList;
+	private  ArrayList<Figure> _figureList;
 
 	private StatePattern _nowState = null;
 
@@ -27,7 +28,7 @@ public class MyFrame extends JFrame {
 
 	public void Init() {
 		_myListener = new MyButtonActionListner(this);
-		_figureList = new Vector<>();
+		_figureList = new ArrayList<>();
 
 		rectBtn = new JButton("사각형");
 		rectBtn.setBounds(20, 20, 80, 35);
@@ -72,11 +73,15 @@ public class MyFrame extends JFrame {
 				_nowState = new DrawLineState(frame);
 			} else if (e.getSource() == moveBtn) {
 				_nowState = new MoveState(frame);
+			} else if (e.getSource() == groupBtn) {
+				_nowState = new DrawGroupState(frame);
 			}
 		}
 	}
 
 	public void do_something(Point p1, Point p2) {
+		if (_nowState == null)
+			return;
 		_nowState.do_something(p1, p2);
 	}
 
@@ -84,8 +89,11 @@ public class MyFrame extends JFrame {
 		_figureList.add(f);
 		repaint();
 	}
-
-	public Vector<Figure> getFigureList() {
+	public void removeFigure(Figure f) {
+		_figureList.remove(f);
+		repaint();
+	}
+	public ArrayList<Figure> getFigureList() {
 		return _figureList;
 	}
 }

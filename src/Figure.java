@@ -9,6 +9,10 @@ public abstract class Figure {
 		_position = p;
 	}
 
+	public void addPosition(Point p) {
+		_position = new Point(_position.x + p.x, _position.y + p.y);
+	}
+
 	public void setSize(Point p) {
 		_size = p;
 	}
